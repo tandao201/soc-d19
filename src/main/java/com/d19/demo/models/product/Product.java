@@ -13,5 +13,7 @@ public class Product {
     private int id;
     @Column(name = "product_name")
     private String productName;
+    private String description;
+    private int price;
     private int quantity;
 }
