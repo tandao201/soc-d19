@@ -19,6 +19,15 @@ public class ProductController {
         return ResultGenerator.genSuccessResult(productService.getAllProducts());
     }
 
+    @GetMapping("/{id}")
+    public Result getProductById(@PathVariable int id) {
+        Product product = productService.getProductById(id);
+        if (product == null) {
+            return ResultGenerator.genFailResult("Sản phẩm không tồn tại", ResultCode.FAIL);
+        }
+        return ResultGenerator.genSuccessResult(product);
+    }
+
     @PostMapping("/status")
     public Result checkQuantityStatus(@RequestBody Product productParam) {
         Product product = productService.getProductByName(productParam.getProductName().toLowerCase());

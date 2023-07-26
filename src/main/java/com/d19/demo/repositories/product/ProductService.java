@@ -18,4 +18,18 @@ public class ProductService {
     public List<Product> getAllProducts() {
         return iProductRepository.findAll();
     }
+
+    public Product getProductById(int id) {
+        return iProductRepository.findById(id).orElse(null);
+    }
+
+    public int updateQuantity(int id, int quantity) {
+        Product product = getProductById(id);
+        if (product != null) {
+            product.setQuantity(product.getQuantity() - quantity);
+            iProductRepository.save(product);
+            return 1;
+        }
+        return 0;
+    }
 }

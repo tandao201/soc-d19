@@ -7,6 +7,7 @@ import com.d19.demo.models.result.Result;
 import com.d19.demo.models.result.ResultCode;
 import com.d19.demo.models.result.ResultGenerator;
 import com.d19.demo.repositories.order.OrderService;
+import com.d19.demo.repositories.product.ProductService;
 import com.d19.demo.utils.mappers.OrderMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,8 @@ import java.util.Map;
 public class OrderController {
     @Autowired
     OrderService orderService;
+    @Autowired
+    ProductService productService;
 
     @GetMapping("/{userId}")
     public Result getAllOrdersByUserId(@PathVariable int userId) {
@@ -38,6 +41,7 @@ public class OrderController {
         List<OrdersProducts> ordersProducts = new ArrayList<>();
         for (Integer id: orderCreate.getProductsId()) {
             ordersProducts.add(new OrdersProducts(order.getId(), id));
+            productService.updateQuantity(id, 1);
         }
         orderService.saveOrdersProducts(ordersProducts);
         return ResultGenerator.genSuccessResult("Đặt hàng thành công");
@@ -52,5 +56,14 @@ public class OrderController {
         Map<String , String> result = new HashMap<>();
         result.put("status", order.getStatus());
         return ResultGenerator.genSuccessResult(result);
+    }
+
+    @GetMapping("/detail/{orderId}")
+    public Result getOrderById(@PathVariable int orderId) {
+        Order order = orderService.getOrderById(orderId);
+        if (order == null) {
+            return ResultGenerator.genFailResult("Đơn hàng không tồn tại", ResultCode.FAIL);
+        }
+        return ResultGenerator.genSuccessResult(order);
     }
 }

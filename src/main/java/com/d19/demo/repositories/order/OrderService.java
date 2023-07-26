@@ -28,6 +28,15 @@ public class OrderService {
         return iOrderRepository.save(order);
     }
 
+    public Order updateOrderStatus(int orderId, String status) {
+        Order order = getOrderById(orderId);
+        if (order != null) {
+            order.setStatus(status);
+            return iOrderRepository.save(order);
+        }
+        return null;
+    }
+
     public void saveOrdersProducts(List<OrdersProducts> ordersProducts) {
         iOrderProductsRepository.saveAll(ordersProducts);
     }
